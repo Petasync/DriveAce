@@ -9,9 +9,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { MainTabParamList } from '../types/navigation.types';
 import { Colors } from '../constants/theme';
 
-// Screens - Placeholder, werden später implementiert
+// Screens
 import DashboardScreen from '../screens/home/DashboardScreen';
-import LearnScreen from '../screens/learning/LearnScreen';
+import LearnNavigator from './LearnNavigator';
 import ExamScreen from '../screens/exam/ExamScreen';
 import StatsScreen from '../screens/stats/StatsScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
@@ -71,8 +71,8 @@ export default function MainNavigator() {
       />
       <Tab.Screen
         name="Learn"
-        component={LearnScreen}
-        options={{ title: 'Lernen', headerTitle: 'Lernen' }}
+        component={LearnNavigator}
+        options={{ title: 'Lernen', headerShown: false }}
       />
       <Tab.Screen
         name="Exam"
