@@ -60,10 +60,7 @@ export default function ExamScreen({ navigation }: ExamScreenProps) {
       await loadRandom(EXAM_CONFIG.TOTAL_QUESTIONS);
 
       // Navigiere zum ExamQuestion Screen
-      navigation.navigate('ExamQuestion', {
-        isExamMode: true,
-        timeLimit: EXAM_CONFIG.TIME_LIMIT_MINUTES * 60, // in Sekunden
-      });
+      navigation.navigate('ExamQuestion');
     } catch (error) {
       console.error('Error starting exam:', error);
       Alert.alert('Fehler', 'Prüfung konnte nicht gestartet werden.');

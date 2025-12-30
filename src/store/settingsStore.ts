@@ -1,9 +1,13 @@
 /**
  * Settings Store - Zustand State Management für App-Einstellungen
+ * Mit AsyncStorage Persistence
  */
 
 import { create } from 'zustand';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeMode } from '../types/models';
+
+const SETTINGS_STORAGE_KEY = '@driveace_settings';
 
 interface SettingsState {
   // Display Settings
@@ -46,15 +50,18 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
 
   setThemeMode: (mode) => {
     set({ themeMode: mode });
-    // Hier würde man auch System Theme Detection durchführen
     if (mode === 'dark') {
       set({ isDarkMode: true });
     } else if (mode === 'light') {
       set({ isDarkMode: false });
     }
+    get().saveSettings();
   },
 
-  setDarkMode: (enabled) => set({ isDarkMode: enabled }),
+  setDarkMode: (enabled) => {
+    set({ isDarkMode: enabled });
+    get().saveSettings();
+  },
 
   toggleDarkMode: () => {
     const { isDarkMode } = get();
@@ -62,41 +69,74 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       isDarkMode: !isDarkMode,
       themeMode: !isDarkMode ? 'dark' : 'light',
     });
+    get().saveSettings();
   },
 
-  setNotifications: (enabled) => set({ notificationsEnabled: enabled }),
+  setNotifications: (enabled) => {
+    set({ notificationsEnabled: enabled });
+    get().saveSettings();
+  },
 
   toggleNotifications: () => {
     const { notificationsEnabled } = get();
     set({ notificationsEnabled: !notificationsEnabled });
+    get().saveSettings();
   },
 
-  setSound: (enabled) => set({ soundEnabled: enabled }),
+  setSound: (enabled) => {
+    set({ soundEnabled: enabled });
+    get().saveSettings();
+  },
 
   toggleSound: () => {
     const { soundEnabled } = get();
     set({ soundEnabled: !soundEnabled });
+    get().saveSettings();
   },
 
-  setDailyGoal: (goal) => set({ dailyGoal: goal }),
+  setDailyGoal: (goal) => {
+    set({ dailyGoal: goal });
+    get().saveSettings();
+  },
 
-  setShowExplanationsImmediately: (show) => set({ showExplanationsImmediately: show }),
+  setShowExplanationsImmediately: (show) => {
+    set({ showExplanationsImmediately: show });
+    get().saveSettings();
+  },
 
   loadSettings: async () => {
-    // Hier würde man Settings aus AsyncStorage oder Database laden
     try {
-      // TODO: Implement loading from AsyncStorage
-      console.log('⚙️ Loading settings...');
+      const storedSettings = await AsyncStorage.getItem(SETTINGS_STORAGE_KEY);
+      if (storedSettings) {
+        const settings = JSON.parse(storedSettings);
+        set({
+          themeMode: settings.themeMode || 'auto',
+          isDarkMode: settings.isDarkMode || false,
+          notificationsEnabled: settings.notificationsEnabled ?? true,
+          soundEnabled: settings.soundEnabled ?? true,
+          dailyGoal: settings.dailyGoal || 30,
+          showExplanationsImmediately: settings.showExplanationsImmediately || false,
+        });
+        console.log('⚙️ Settings loaded successfully');
+      }
     } catch (error) {
       console.error('❌ Error loading settings:', error);
     }
   },
 
   saveSettings: async () => {
-    // Hier würde man Settings in AsyncStorage oder Database speichern
     try {
-      // TODO: Implement saving to AsyncStorage
-      console.log('💾 Saving settings...');
+      const { themeMode, isDarkMode, notificationsEnabled, soundEnabled, dailyGoal, showExplanationsImmediately } = get();
+      const settings = {
+        themeMode,
+        isDarkMode,
+        notificationsEnabled,
+        soundEnabled,
+        dailyGoal,
+        showExplanationsImmediately,
+      };
+      await AsyncStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+      console.log('💾 Settings saved successfully');
     } catch (error) {
       console.error('❌ Error saving settings:', error);
     }

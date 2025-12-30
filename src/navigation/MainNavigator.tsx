@@ -12,7 +12,7 @@ import { Colors } from '../constants/theme';
 // Screens
 import DashboardScreen from '../screens/home/DashboardScreen';
 import LearnNavigator from './LearnNavigator';
-import ExamScreen from '../screens/exam/ExamScreen';
+import ExamNavigator from './ExamNavigator';
 import StatsScreen from '../screens/stats/StatsScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 
@@ -76,8 +76,8 @@ export default function MainNavigator() {
       />
       <Tab.Screen
         name="Exam"
-        component={ExamScreen}
-        options={{ title: 'Prüfung', headerTitle: 'Prüfungssimulation' }}
+        component={ExamNavigator}
+        options={{ title: 'Prüfung', headerShown: false }}
       />
       <Tab.Screen
         name="Stats"
