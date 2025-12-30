@@ -10,19 +10,23 @@ Moderne Lern-App für die theoretische Führerscheinprüfung (Klasse B) mit Free
 ## 🎯 Features
 
 ### FREE Version
-- ✅ Alle 50 Fragen verfügbar (wird auf 1.500+ erweitert)
-- ✅ Lernen nach Kategorien
-- ✅ Basis-Statistiken
+- ✅ 100 Fragen verfügbar (wird auf 150+ erweitert)
+- ✅ Lernen nach Kategorien (7 Kategorien)
+- ✅ 5 Lernmodi (Alle Fragen, Nach Kategorie, Zufällig, Schwierige, Favoriten)
+- ✅ Live-Statistiken & Fortschritt
+- ✅ Streak-Tracking
 - ✅ Offline-First Funktionalität
-- ⚡ Mit Werbung
+- ✅ Dark Mode Support
+- ⚡ Mit Werbung (planned)
 
-### PREMIUM Abo (Coming Soon)
+### PREMIUM Abo
 - ✅ Werbefrei
-- ✅ Prüfungssimulation
-- ✅ Erweiterte Statistiken
-- ✅ Cloud-Sync
-- ✅ Fehlertraining
+- ✅ **Prüfungssimulation (30 Fragen, 45 Min, Timer)**
+- ✅ **Erweiterte Statistiken mit Kategorieanalyse**
+- ✅ **Detaillierte Prüfungsauswertung**
 - ✅ Dark Mode
+- 🔄 Cloud-Sync (in Entwicklung)
+- 🔄 Fehlertraining (geplant)
 
 ## 🛠️ Tech Stack
 
@@ -81,8 +85,9 @@ npx expo start
 Die App verwendet SQLite für lokale Datenspeicherung:
 
 1. Schema wird automatisch beim ersten Start erstellt
-2. 50 Seed-Fragen werden automatisch geladen
+2. 100 Seed-Fragen werden automatisch geladen (50 initial + 50 expansion)
 3. Alle Daten bleiben offline verfügbar
+4. AsyncStorage für Settings-Persistenz
 
 ### Database Schema
 
@@ -100,19 +105,35 @@ Die App verwendet SQLite für lokale Datenspeicherung:
 ```
 DriveAce/
 ├── src/
-│   ├── components/         # Wiederverwendbare UI-Komponenten
-│   ├── screens/            # App Screens (Home, Learn, Exam, etc.)
-│   ├── navigation/         # Navigation Setup
-│   ├── services/           # Database, Auth, Ads Services
-│   ├── hooks/              # Custom React Hooks
-│   ├── store/              # Zustand State Management
-│   ├── utils/              # Helper Functions
-│   ├── types/              # TypeScript Type Definitions
-│   ├── constants/          # Theme, Colors, Config
+│   ├── components/
+│   │   ├── common/         # ErrorBoundary, LoadingSpinner
+│   │   ├── questions/      # AnswerButton, ProgressBar
+│   │   └── categories/     # CategoryCard
+│   ├── screens/
+│   │   ├── home/           # DashboardScreen (Live-Stats)
+│   │   ├── learning/       # QuestionScreen, CategoryScreen, QuestionListScreen
+│   │   ├── exam/           # ExamScreen, ExamQuestionScreen, ExamResultScreen
+│   │   ├── stats/          # StatsScreen (Live-Daten)
+│   │   └── profile/        # ProfileScreen (Settings, Premium)
+│   ├── navigation/
+│   │   ├── AppNavigator    # Root Navigator
+│   │   ├── MainNavigator   # Bottom Tabs
+│   │   ├── LearnNavigator  # Learning Stack
+│   │   └── ExamNavigator   # Exam Stack (NEW)
+│   ├── services/
+│   │   ├── database/       # DatabaseService (SQLite)
+│   │   └── auth/           # AuthService (Supabase)
+│   ├── hooks/              # useDatabase, useProgress, useFavorites, useStreak
+│   ├── store/              # authStore, questionsStore, settingsStore
+│   ├── contexts/           # ThemeContext (Dark Mode)
+│   ├── utils/              # helpers.ts (20+ functions)
+│   ├── types/              # TypeScript Interfaces
+│   ├── constants/          # theme.ts, config.ts
 │   └── assets/             # Images, Icons, Fonts
 ├── database/
 │   ├── schema.sql          # Database Schema
-│   └── seed.sql            # 50 Initial Questions
+│   ├── seed.sql            # 50 Initial Questions
+│   └── seed_expansion.sql  # 50 Additional Questions
 ├── docs/                   # Documentation
 ├── .env.example            # Environment Template
 └── README.md
@@ -132,27 +153,51 @@ Siehe `src/constants/theme.ts` für Details.
 
 ## 🚀 Development
 
-### Aktuelle Phase: MVP (v1.0)
+### Aktuelle Phase: MVP+ (v1.0)
 
-✅ **Fertiggestellt:**
+✅ **Phase 1 - MVP Setup (Completed):**
 - Projekt Setup & Struktur
-- Database Schema & Services
+- Database Schema & Services (SQLite)
 - Auth Integration (Supabase)
-- Navigation Structure
-- Design System
-- 50 Seed-Fragen
+- Navigation Structure (Tabs + Stacks)
+- Design System & Theme
+- 50 Initial Seed-Fragen
+
+✅ **Phase 2 - Core Learning (Completed):**
+- Question Screen mit Live-Feedback
+- 5 Learning Modes
+- Custom Hooks (useDatabase, useProgress, useFavorites, useStreak)
+- Category System (7 Kategorien)
+- Progress Tracking & Favorites
+- UI Components (AnswerButton, ProgressBar, CategoryCard)
+
+✅ **Phase 3 - Premium Features (Completed):**
+- **Exam Simulation** (30 Fragen, 45 Min Timer, Premium-Gate)
+- **Statistics Screen** mit Live-Daten
+- **Profile Screen** mit Settings
+- Premium Badge & Upgrade Flow
+
+✅ **Phase 4 - Gründliche Verbesserungen (Completed):**
+- **Dark Mode** mit ThemeContext & Auto-Detection
+- **Enhanced Dashboard** mit Kategoriefortschritt & Live-Stats
+- **AsyncStorage** für Settings-Persistenz
+- **Error Boundary** für Crash Prevention
+- **20+ Helper Functions** (formatTime, calculatePercentage, etc.)
+- **Exam Flow komplett**: ExamQuestionScreen, ExamResultScreen, Navigation
+- **50 zusätzliche Fragen** (100 total)
 
 🔄 **In Arbeit:**
-- Question Screen (Hauptfeature)
-- Learning Mode
-- Progress Tracking
+- Weitere 50 Fragen (Ziel: 150 Fragen)
+- Onboarding Flow für neue User
+- Dedicated Premium Screen
 
 📅 **Geplant:**
-- Exam Simulation (Premium)
-- Statistics Dashboard
 - AdMob Integration
-- Cloud Sync
-- 1.500+ Fragen
+- RevenueCat Premium Subscriptions
+- Cloud Sync (Supabase)
+- Erweiterte Fehleranalyse
+- Push Notifications
+- 500+ Fragen
 
 Siehe `TODO.md` für detaillierte Roadmap.
 
@@ -204,6 +249,21 @@ MIT © 2024 PetaSync
 
 ---
 
-**Status:** 🚧 In Development - MVP Phase
+**Status:** 🎯 MVP+ Complete - Ready for Testing
+
+**Aktuelle Version:** v1.0.0 (MVP+)
+
+**Highlights:**
+- ✅ Vollständiger Exam Flow mit Timer & Auswertung
+- ✅ Dark Mode Support
+- ✅ 100 Deutsche Fahrschulfragen
+- ✅ Live-Statistiken & Dashboard
+- ✅ 5 Lernmodi
+- ✅ Offline-First Architecture
+
+**Nächste Schritte:**
+- Weitere 50 Fragen hinzufügen
+- AdMob & RevenueCat Integration
+- App Store Deployment
 
 Letzte Aktualisierung: 30. Dezember 2024
